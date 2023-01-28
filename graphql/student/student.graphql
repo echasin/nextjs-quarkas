@@ -13,7 +13,6 @@ mutation newOrganization{
   }  
 } 
 
-
 mutation CreateNewStudent($values: StudentInputInput!) {
   newStudent(values: $values) {
     id
@@ -22,6 +21,13 @@ mutation CreateNewStudent($values: StudentInputInput!) {
   }
 }
 
+query getOneStudent($id: BigInteger) {
+  student(id: $id) {
+    id
+    studentIdentifier
+    studentJson
+  }
+}
  
 
  
