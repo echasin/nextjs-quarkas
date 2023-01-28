@@ -1,0 +1,27 @@
+query Students {
+  students {
+    id
+    studentIdentifier
+    studentJson
+  }
+}
+
+mutation newOrganization{
+ newOrganization(data: {name: "Axacme"} ) {
+   id
+   name
+  }  
+} 
+
+
+mutation CreateNewStudent($values: StudentInputInput!) {
+  newStudent(values: $values) {
+    id
+    studentIdentifier
+    studentJson
+  }
+}
+
+ 
+
+ 
