@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@apollo/client'
 
 import { CreateNewStudentDocument, NewOrganizationDocument, StudentInputInput, StudentsDocument, StudentsQuery, StudentsQueryVariables } from '@/gql/graphql'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
-import { Box, Button, Divider, Input, Modal, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, Input, Modal, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Field, FieldArray, Form, FormLoader, getFieldProps, Reset, ResponseMessage, Submit } from 'apollo-form'
 import * as Yup from 'yup';
@@ -13,23 +13,8 @@ import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router'
 
 export default function Home() {
-
-
-  const styled = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-  
+    
   const router = useRouter()
-
-  const [open, setOpen] = useState(false);
 
   const { data, error, loading } = useQuery(StudentsDocument);
 
@@ -39,50 +24,22 @@ export default function Home() {
 
   if (loading) {
     console.log('Loading')
-  }
+  } 
 
- const [addTodo] = useMutation(CreateNewStudentDocument);
- 
- const createStudentMutation =  (values: any) => {
-  console.log(values)
-  const studentJson={
-    "studentName": values.values.studentName,
-    "testscores": [
-    ]
-   }
+  let rows = [];
 
-  const student: any={
-    "values": {
-      "studentIdentifier": "5555555",
-      "studentJson": studentJson
-    }
-  }
-  
-   console.log(values)
-   addTodo({ variables: student });  
-   setOpen(false);
- };
+ console.log('555555555');
+ console.log(data);
+ console.log(data?.students);
 
- interface CreatePlanFormValues {
-  studentName: string;
-}
+  const newStudentPage =  () => {
+    router.push('newStudent');
+  };
 
-const validationSchema = Yup.object().shape({
-  studentName: Yup.string().required()
-});
-
-const initialState = {
-  studentName: ''
-};
-
-const newStudentPage =  () => {
-  router.push('newStudent');
-};
-
-const editStudentPage =  (id: number) => {
-  console.log(id)
-  router.push({pathname: 'editStudent/[id]' , query: { id: id }});
-};
+  const editStudentPage =  (id: number) => {
+    console.log(id)
+    router.push({pathname: 'editStudent/[id]' , query: { id: id }});
+  };
 
 
   return (
@@ -93,29 +50,53 @@ const editStudentPage =  (id: number) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Typography variant='h4'> 
+        Students
+      </Typography>   
+      <Typography align='center'> 
+        <Button 
+            variant="contained"
+            onClick={newStudentPage}>
+              New Student
+        </Button>
+      </Typography>   
 
-      <Button 
-          variant="contained"
-          onClick={newStudentPage}>
-            New Student
-      </Button>
-
-          { data?.students?.map(item=> { 
-            return (
-              <> 
-                <Stack direction='row'>
-                  <Typography> { item?.id} </Typography>
-                  <Typography> { item?.studentIdentifier} </Typography>
-                  <Typography> { item?.studentJson} </Typography>
-                  <Button 
-                    variant="contained"
-                    onClick={(e)=> editStudentPage(item?.id)}>
-                      Edit
-                  </Button>
-                </Stack>  
-              </>
-            );
-           })} 
+      <TableContainer component={Paper}>
+       <Table sx={{ maxWidth: 850 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="right">Id</TableCell>
+            <TableCell align="right">student Identifier</TableCell>
+            <TableCell align="right">User Name</TableCell>
+            <TableCell align="right">Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data?.students?.map((row) => (
+            <TableRow
+              key={row?.id}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell  align="right" component="th" scope="row">
+                {row?.id}
+              </TableCell>
+              <TableCell align="right" component="th" scope="row">
+                {row?.studentIdentifier}
+              </TableCell>
+              <TableCell align="right">{JSON.parse(row?.studentJson as string).studentName}
+              </TableCell>
+              <TableCell align="right">
+                <Button 
+                  variant="contained"
+                  onClick={(e)=> editStudentPage(row?.id)}>
+                    Edit
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      </TableContainer>   
     </>
   )
 }

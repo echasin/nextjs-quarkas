@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@apollo/client'
 
 import { CreateNewStudentDocument, NewOrganizationDocument, StudentInputInput, StudentsDocument, StudentsQuery, StudentsQueryVariables } from '@/gql/graphql'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
-import { Box, Button, Divider, Input, Modal, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, Divider, Grid, Input, Modal, Stack, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Field, FieldArray, Form, FormLoader, getFieldProps, Reset, ResponseMessage, Submit } from 'apollo-form'
 import * as Yup from 'yup';
@@ -28,7 +28,7 @@ export default function NewStudent() {
       const student: any={
         "values": {
           "studentIdentifier": "5555555",
-          "studentJson": studentJson
+          "studentJson": JSON.stringify(studentJson)
         }
       }      
        console.log(values)
@@ -36,7 +36,7 @@ export default function NewStudent() {
        studentPage();
      };
     
-     interface CreatePlanFormValues {
+    interface CreatePlanFormValues {
       studentName: string;
     }
     
@@ -60,12 +60,19 @@ export default function NewStudent() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-          
-      <Button 
-          variant="contained"
-          onClick={studentPage}>
-             Student Page
-      </Button>
+
+      <Grid container sx={{ p:2 , m:10 }}>
+        <Grid item xs={2} >
+        </Grid>  
+        <Grid item xs={8} >
+        <Card sx={{ p:2 , m:10 }}>
+        <Typography align='right'  >    
+          <Button 
+            variant="contained"
+            onClick={studentPage}>
+              Student Page
+          </Button>
+      </Typography>
           
       <Form<CreatePlanFormValues>
                   name='CreatePlanForm'
@@ -106,7 +113,11 @@ export default function NewStudent() {
                         )}
                     </Reset>
                   </Box>  
-                </Form>        
+                </Form>
+          </Card>              
+        </Grid>  
+      </Grid>   
+      
     </>
   )
 }

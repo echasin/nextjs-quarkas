@@ -1,4 +1,4 @@
-query Students {
+query students {
   students {
     id
     studentIdentifier
@@ -13,7 +13,7 @@ mutation newOrganization{
   }  
 } 
 
-mutation CreateNewStudent($values: StudentInputInput!) {
+mutation createNewStudent($values: StudentInputInput!) {
   newStudent(values: $values) {
     id
     studentIdentifier
@@ -27,6 +27,10 @@ query getOneStudent($id: BigInteger) {
     studentIdentifier
     studentJson
   }
+}
+
+mutation updateStudent($data: StudentInputInput!) {
+  updateStudent(data: $data) 
 }
  
 
