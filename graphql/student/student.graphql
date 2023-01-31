@@ -32,6 +32,10 @@ query getOneStudent($id: BigInteger) {
 mutation updateStudent($data: StudentInputInput!) {
   updateStudent(data: $data) 
 }
+
+mutation deleteStudent($id: BigInteger!) {
+  deleteStudent(id: $id)  
+}
  
 
  

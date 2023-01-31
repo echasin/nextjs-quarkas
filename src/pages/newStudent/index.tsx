@@ -5,11 +5,15 @@ import { useMutation, useQuery } from '@apollo/client'
 
 import { CreateNewStudentDocument, NewOrganizationDocument, StudentInputInput, StudentsDocument, StudentsQuery, StudentsQueryVariables } from '@/gql/graphql'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
-import { Box, Button, Card, Divider, Grid, Input, Modal, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, Divider, Grid, Input, Modal, Stack, styled, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { Field, FieldArray, Form, FormLoader, getFieldProps, Reset, ResponseMessage, Submit } from 'apollo-form'
 import * as Yup from 'yup';
 import { useRouter } from 'next/router'
+
+const MyButton = styled(Button)({
+  textTransform: 'none', 
+});
 
 export default function NewStudent() {
     
@@ -18,7 +22,6 @@ export default function NewStudent() {
      const [addTodo] = useMutation(CreateNewStudentDocument);
      
      const createStudentMutation =  (values: any) => {
-      console.log(values)
       const studentJson={
         "studentName": values.values.studentName,
         "testscores": [
@@ -31,7 +34,6 @@ export default function NewStudent() {
           "studentJson": JSON.stringify(studentJson)
         }
       }      
-       console.log(values)
        addTodo({ variables: student });  
        studentPage();
      };
@@ -67,11 +69,11 @@ export default function NewStudent() {
         <Grid item xs={8} >
         <Card sx={{ p:2 , m:10 }}>
         <Typography align='right'  >    
-          <Button 
+          <MyButton 
             variant="contained"
             onClick={studentPage}>
               Student Page
-          </Button>
+          </MyButton>
       </Typography>
           
       <Form<CreatePlanFormValues>
@@ -100,16 +102,16 @@ export default function NewStudent() {
                   <Box sx={{ pt : 3}}>
                     <Submit>
                         {({ disabled }) => (
-                          <Button type='submit' disabled={disabled} >
+                          <MyButton type='submit' disabled={disabled} >
                               Create Student
-                          </Button>
+                          </MyButton>
                         )}
                     </Submit>
                     <Reset>
                         {({ disabled }) => (
-                          <Button type='reset' disabled={disabled}  color="error" >
+                          <MyButton type='reset' disabled={disabled}  color="error" >
                               Reset
-                          </Button>
+                          </MyButton>
                         )}
                     </Reset>
                   </Box>  
