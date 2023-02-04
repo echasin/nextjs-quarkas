@@ -1,11 +1,11 @@
 import * as React from 'react';
-
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridEventListener,GridFooter,useGridApiContext, useGridApiEventHandler} from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid';
 import Layout from 'components/layouts/layout'
 import Link from '@mui/material/Link';
@@ -54,6 +54,28 @@ const columns: GridColDef[] = [
     }
 ];
 
+//FUNCTIONAL COMPONENT FOR DATAGRID FOOTER
+// const Footer is required by Data Grid
+const Footer = () => {
+    const [message, setMessage] = React.useState('');
+    const apiRef = useGridApiContext();
+  
+    const handleRowClick: GridEventListener<'rowClick'> = (params) => {
+      setMessage(`Student "${params.row.id}" clicked`);
+    };
+  
+    useGridApiEventHandler(apiRef, 'rowClick', handleRowClick);
+  
+    return (
+      <React.Fragment>
+        <GridFooter />
+        {message && <Alert severity="info">{message}</Alert>}
+      </React.Fragment>
+    );
+  };
+
+
+
 export default function StudentListVersion2() {
 
     //RETREIVE DATA USING GRAPHQL FROM GENERATED CODE
@@ -92,6 +114,7 @@ export default function StudentListVersion2() {
                         checkboxSelection
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
+                        components={{Footer}}
                     />
                 </Box>
 
