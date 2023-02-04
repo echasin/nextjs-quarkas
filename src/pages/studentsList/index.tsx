@@ -12,6 +12,8 @@ import * as Yup from 'yup';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router'
 
+
+
 const MyButton = styled(Button)({
   textTransform: 'none', 
 });
@@ -36,6 +38,11 @@ export default function StudentList() {
     router.push('newStudent');
   };
 
+  //ECHASIN
+  const StudentsListVersion2Page =  () => {
+    router.push('StudentsListVersion2');
+  };
+
   const editStudentPage =  (id: number) => {
     router.push({pathname: 'editStudent/[id]' , query: { id: id }});
   };
@@ -58,6 +65,12 @@ export default function StudentList() {
             onClick={newStudentPage}>
               New Student
         </MyButton>
+        <Button
+          variant="outlined"
+          onClick={StudentsListVersion2Page}> 
+          Link to New Page
+        </Button>
+
       </Typography>   
 
       <TableContainer component={Paper}>

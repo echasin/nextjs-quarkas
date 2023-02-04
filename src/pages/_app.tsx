@@ -1,4 +1,4 @@
-import '@/styles/globals.css'
+//import '@/styles/globals.css'
 import InnvoApolloProvider from 'graphql/apollo'
 import type { AppProps } from 'next/app'
 
