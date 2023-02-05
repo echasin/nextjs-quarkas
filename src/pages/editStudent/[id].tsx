@@ -49,8 +49,10 @@ function EditStudent() {
     }
 
     let rows: {course: string, score: number}[] = [];
+    let studentName: string = ''; //ALI
 
     if (data) {
+       studentName=JSON.parse(data?.student?.studentJson as string).studentName //ALI
        rows =  JSON.parse(data?.student?.studentJson as string).testscores;
     }
 
@@ -214,8 +216,13 @@ function EditStudent() {
       </Typography>
 
       <Stack direction='row' spacing={5}>
-        <Typography> Student Identifier:   </Typography>
+        <Typography> Student Identifier :  </Typography>
         <Typography> { data?.student?.studentIdentifier} </Typography>
+      </Stack>
+
+      <Stack direction='row' spacing={5}> {/* ALI */}
+        <Typography> Student Name :  </Typography>
+        <Typography> {studentName} </Typography>      
       </Stack>
 
       <Divider sx={{ p:2 }} />
