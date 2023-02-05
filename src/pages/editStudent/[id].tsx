@@ -1,16 +1,14 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import { Context, useMutation, useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { styled } from '@mui/material/styles';
 import { CreateNewStudentDocument, DeleteStudentDocument, GetOneStudentDocument, NewOrganizationDocument, StudentInputInput, StudentsDocument, StudentsQuery, StudentsQueryVariables, UpdateStudentDocument } from '@/gql/graphql'
-import { DataGrid, GridColDef, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid'
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Input, Modal, Stack, TextField, Typography } from '@mui/material'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Input, Stack, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { Field, FieldArray, Form, FormLoader, getFieldProps, Reset, ResponseMessage, Submit } from 'apollo-form'
+import { Field, Form, FormLoader, getFieldProps, Reset, ResponseMessage, Submit } from 'apollo-form'
 import * as Yup from 'yup';
 import { useRouter } from 'next/router'
-import { GetServerSideProps } from 'next';
+import { DeleteStudent, GetOneStudent, UpdateStudent } from 'graphql/gql/studnet';
 
 const MyButton = styled(Button)({
   textTransform: 'none', 
@@ -22,13 +20,16 @@ function EditStudent() {
 
   var id = router.query.id;
     
-    const { data, error, loading } = useQuery(GetOneStudentDocument, {
+   // const { data, error, loading } = useQuery(GetOneStudentDocument, { // codegen
+    const { data, error, loading } = useQuery(GetOneStudent, {
       variables: { id:  Number(id) },
     });
 
-    const [updateStudent] = useMutation(UpdateStudentDocument);
+   // const [updateStudent] = useMutation(UpdateStudentDocument);// codegen
+    const [updateStudent] = useMutation(UpdateStudent);
    
-    const [deleteStudent] = useMutation(DeleteStudentDocument, {
+   // const [deleteStudent] = useMutation(DeleteStudentDocument, { //codegen
+    const [deleteStudent] = useMutation(DeleteStudent, {  
       variables: { id:  Number(id) },
     });
 
@@ -134,10 +135,6 @@ function EditStudent() {
     const editTest = (values: any) => {
       
       const filteredrows = rows.filter((item) => item.course !== course);
-
-      console.log('1111111111111111111111111111111111111111110')
-      console.log(filteredrows)
-      console.log(values.values)
 
       rows=[...filteredrows, values.values];
 
