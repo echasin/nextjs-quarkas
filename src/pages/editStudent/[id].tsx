@@ -18,16 +18,23 @@ function EditStudent() {
     
   const router = useRouter()
 
-  var id = router.query.id;
-    
+  var id = router.query.id;    
+
    // const { data, error, loading } = useQuery(GetOneStudentDocument, { // codegen
-    const { data, error, loading } = useQuery(GetOneStudent, {
-      variables: { id:  Number(id) },
+  const  {  data, error, loading , refetch}= useQuery(GetOneStudent, {
+    variables: { id:  Number(id) },
+  });
+
+   // const [updateStudent] = useMutation(UpdateStudentDocument,{ // codegen
+    const [updateStudent] = useMutation(UpdateStudent,{
+      onCompleted(res) {
+        refetch({ id: Number(id) })
+      },
+      onError(data) {
+        console.log(data);
+      }
     });
 
-   // const [updateStudent] = useMutation(UpdateStudentDocument);// codegen
-    const [updateStudent] = useMutation(UpdateStudent);
-   
    // const [deleteStudent] = useMutation(DeleteStudentDocument, { //codegen
     const [deleteStudent] = useMutation(DeleteStudent, {  
       variables: { id:  Number(id) },
@@ -114,7 +121,6 @@ function EditStudent() {
       router.push('/');
     };
 
-
     const saveNewTest = (values: any) => {      
       rows=[...rows, values.values];
 
@@ -175,7 +181,6 @@ function EditStudent() {
               size="small"
               style={{ marginLeft: 16 }}
               tabIndex={params.hasFocus ? 0 : -1}
-            //  onClick={handleEditOpen}
               color="error"
             >
               Delete
