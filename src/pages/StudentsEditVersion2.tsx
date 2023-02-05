@@ -15,7 +15,6 @@ import Typography from '@mui/material/Typography';
 
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { StudentsDocument } from '@/gql/graphql'
-import { useRouter } from 'next/router';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -25,7 +24,6 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
 }));
-
 
 
 //RETREIVE DATA USING GRAPHQL DEFINED QUERY
@@ -75,11 +73,8 @@ const Footer = () => {
       </React.Fragment>
     );
   };
-  const router = useRouter();
 
-  const editStudentPage =  (id: number) => {
-    router.push({pathname: 'editStudent/[id]' , query: { id: id }});
-  };
+
 
 export default function StudentListVersion2() {
 
@@ -118,14 +113,6 @@ export default function StudentListVersion2() {
                         rowsPerPageOptions={[5]}
                         checkboxSelection
                         disableSelectionOnClick
-                        onCellDoubleClick={(params, event) => {
-                           console.log('DOUBLE CLICK')
-                          }}
-                        onCellClick={(params, event) => {
-                            console.log('CLICK', params)
-
-                            // editStudentPage(params?.id)
-                           }}
                         experimentalFeatures={{ newEditingApi: true }}
                         components={{Footer}}
                     />
