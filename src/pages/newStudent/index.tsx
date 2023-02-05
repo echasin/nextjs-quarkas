@@ -10,6 +10,7 @@ import { useState } from 'react'
 import { Field, FieldArray, Form, FormLoader, getFieldProps, Reset, ResponseMessage, Submit } from 'apollo-form'
 import * as Yup from 'yup';
 import { useRouter } from 'next/router'
+import { CreateNewStudent } from 'graphql/gql/studnet'
 
 const MyButton = styled(Button)({
   textTransform: 'none', 
@@ -19,7 +20,9 @@ export default function NewStudent() {
     
     const router = useRouter()
 
-     const [addTodo] = useMutation(CreateNewStudentDocument);
+     //const [addNewStudent] = useMutation(CreateNewStudentDocument);// codegen
+     const [addNewStudent] = useMutation(CreateNewStudent);
+
      
      const createStudentMutation =  (values: any) => {
       const studentJson={
@@ -34,7 +37,7 @@ export default function NewStudent() {
           "studentJson": JSON.stringify(studentJson)
         }
       }      
-       addTodo({ variables: student });  
+      addNewStudent({ variables: student });  
        studentPage();
      };
     
