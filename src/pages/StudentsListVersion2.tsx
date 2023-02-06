@@ -5,10 +5,9 @@ import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-import { DataGrid, GridColDef, GridEventListener,GridFooter,useGridApiContext, useGridApiEventHandler} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridEventListener,GridFooter,GridRenderCellParams,useGridApiContext, useGridApiEventHandler} from '@mui/x-data-grid';
 import Grid from '@mui/material/Grid';
 import Layout from 'components/layouts/layout'
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -16,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { StudentsDocument } from '@/gql/graphql'
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { Button, Stack } from '@mui/material';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -26,7 +27,9 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-
+const MyButton = styled(Button)({
+  textTransform: 'none', 
+});
 
 //RETREIVE DATA USING GRAPHQL DEFINED QUERY
 const QUERY_GETSTUDENTS = gql`
@@ -39,26 +42,10 @@ const QUERY_GETSTUDENTS = gql`
    }
 `;
 
-//CONFIG DATA GRID
-const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-        field: 'studentIdentifier',
-        headerName: 'Student Identifier',
-        width: 150,
-        editable: true,
-    },
-    {
-        field: 'studentJson',
-        headerName: 'Student JSON',
-        width:  750,
-        editable: true,
-    }
-];
-
 //FUNCTIONAL COMPONENT FOR DATAGRID FOOTER
 // const Footer is required by Data Grid
 const Footer = () => {
+
     const [message, setMessage] = React.useState('');
     const apiRef = useGridApiContext();
   
@@ -75,13 +62,15 @@ const Footer = () => {
       </React.Fragment>
     );
   };
-  const router = useRouter();
-
-  const editStudentPage =  (id: number) => {
-    router.push({pathname: 'editStudent/[id]' , query: { id: id }});
-  };
 
 export default function StudentListVersion2() {
+
+  const router = useRouter(); //ALI  DECLARATION SHOULD BE INSIDE FUNCTION SCOPE 
+
+  const editStudentPage =  (id: any) => {
+    console.log (id) 
+    router.push({pathname: 'editStudent/[id]' , query: { id: id }});
+  };
 
     //RETREIVE DATA USING GRAPHQL FROM GENERATED CODE
     // const { data, error, loading } = useQuery(StudentsDocument);
@@ -105,6 +94,48 @@ export default function StudentListVersion2() {
     const students = data.students;
     console.log("students:", students);
 
+    //CONFIG DATA GRID
+const columns: GridColDef[] = [
+  { 
+      field: 'id',
+      headerName: 'ID', 
+      width: 90,
+      renderCell: (params) => ( //ALI
+          <Link href={`/editStudent/${params.value}`}>{params.value}</Link>
+        ) 
+  },
+  {
+      field: 'studentIdentifier',
+      headerName: 'Student Identifier',
+      width: 150,
+      editable: true,
+  },
+  {
+      field: 'studentJson',
+      headerName: 'Student JSON',
+      width:  750,
+      editable: true,
+  },
+  {
+    field: 'Action',  //ALI
+    headerName: 'Action',
+    width: 250,
+    renderCell: (params: GridRenderCellParams<Date>) => (
+      <Stack direction='row'>
+        <MyButton
+          variant="contained"
+          size="small"
+          style={{ marginLeft: 16 }}
+          tabIndex={params.hasFocus ? 0 : -1}
+          onClick={(e: any)=> editStudentPage(params.id)}
+        >
+          Edit
+        </MyButton>
+      </Stack>
+    ),
+  }
+];
+
     return (
         <div className='main-content'>
             <Container>
@@ -118,14 +149,9 @@ export default function StudentListVersion2() {
                         rowsPerPageOptions={[5]}
                         checkboxSelection
                         disableSelectionOnClick
-                        onCellDoubleClick={(params, event) => {
+                        onCellDoubleClick={(params, event) => { ///ALI REMOVE CELL CLICK ACTION
                            console.log('DOUBLE CLICK')
-                          }}
-                        onCellClick={(params, event) => {
-                            console.log('CLICK', params)
-
-                            // editStudentPage(params?.id)
-                           }}
+                          }}           
                         experimentalFeatures={{ newEditingApi: true }}
                         components={{Footer}}
                     />
